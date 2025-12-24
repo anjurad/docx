@@ -1,0 +1,56 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Editor and IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*~
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+build/
+dist/
+
+# Testing / Coverage
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Logs
+*.log
+
+# Environment variables / secrets
+.env
+.env.*
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+*.zip
+*.tar.gz
+*.egg
+
+# Local workspace settings
+.localhistory/
