@@ -5,14 +5,19 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:2-3.14-trixie",
 	"features": {
-		"ghcr.io/devcontainers/features/git:1": {},
-		"ghcr.io/devcontainers-extra/features/pandoc:1": {}
+		"ghcr.io/devcontainers-extra/features/pandoc:1": {},
+		"ghcr.io/devcontainers-extra/features/uv:1": {}
 	},
+	"postCreateCommand": "sh -c 'if [ ! -d .venv ]; then uv venv; fi; uv pip install -e \".[dev]\"'",
 	"customizations": {
 		"vscode": {
-			"extensions": [
-				"cweijan.vscode-office"
-			]
+			"settings": {
+				"python.defaultInterpreterPath": "/workspaces/docx/.venv/bin/python",
+				"terminal.integrated.env.linux": {
+					"VIRTUAL_ENV": "/workspaces/docx/.venv",
+					"PATH": "/workspaces/docx/.venv/bin:${env:PATH}"
+				}
+			}
 		}
 	}
 
