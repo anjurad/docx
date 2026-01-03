@@ -4,19 +4,24 @@
 
 ## ✨ Features
 
-- 📝 Convert Markdown to professionally formatted Word documents
-- 🎨 Custom Word template support
-- 🖼️ Automatic image handling with resource path resolution
-- ⏱️ Timestamped output files for version control
-- 🔍 Comprehensive input validation
-- 🧪 Fully tested with pytest
+- 📝 Convert Markdown to professionally formatted Word documents via pandoc
+- 🎨 Custom Word template support with `--reference-doc`
+- 🖼️ Automatic image handling with flexible resource path resolution
+- ⏱️ Auto-generated timestamped output files (no output path required)
+- 📁 Smart output directory creation (auto-derived from session structure)
+- 🔍 Comprehensive input validation (file existence, extensions, pandoc availability)
+- 🧪 Fully tested with pytest (18 tests covering CLI, conversion, and validation)
 
 ## 📋 Requirements
 
-- **Python 3.9+**
+### Dev Container (Automatic)
+
+If using the dev container, **everything is pre-installed** - skip to [Dev Container section](#-dev-container-recommended).
+
+### Local Setup (Manual)
+
+- **Python 3.9+** (Python 3.14 used in dev container)
 - **[pandoc](https://pandoc.org/)** - Universal document converter
-  
-  > **Note:** If using the devcontainer, pandoc is pre-installed and ready to use.
   
   ```bash
   # macOS
@@ -28,28 +33,84 @@
   # Windows
   choco install pandoc
   ```
+
 - **[uv](https://github.com/astral-sh/uv)** - Fast Python package installer (recommended)
-  
-  > **Note:** If using the devcontainer, uv is pre-installed and ready to use.
   
   ```bash
   # Install uv
   curl -LsSf https://astral.sh/uv/install.sh | sh
   ```
 
-## 🚀 Quick Start
+## � Dev Container (Recommended)
+
+This project includes a fully configured dev container that automatically sets up your development environment.
+
+### What's Pre-Installed
+
+When you open this project in a dev container (VS Code + Docker), the following are **automatically configured**:
+
+- ✅ **Python 3.14** (Debian Trixie base image)
+- ✅ **pandoc** (via devcontainer feature)
+- ✅ **uv** (fast Python package installer via devcontainer feature)
+- ✅ **Virtual environment** (`.venv` created automatically)
+- ✅ **Project dependencies** (installed via `postCreateCommand`)
+- ✅ **Python interpreter** (pre-configured in VS Code settings)
+
+### Getting Started with Dev Container
+
+1. **Install Prerequisites:**
+   - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+   - [VS Code](https://code.visualstudio.com/)
+   - [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+2. **Open in Container:**
+   ```bash
+   # Clone and open
+   git clone <repo-url>
+   cd docx
+   code .
+   ```
+   - VS Code will prompt: "Reopen in Container" → Click it
+   - Wait for container to build and initialize (~2-3 minutes first time)
+
+3. **Start Working:**
+   ```bash
+   # Everything is ready! Just run:
+   md-to-docx --version
+   pytest -v
+   ```
+
+### What Happens Automatically
+
+The `postCreateCommand` in `.devcontainer/devcontainer.json` runs:
+```bash
+if [ ! -d .venv ]; then uv venv; fi
+uv pip install -e ".[dev]"
+```
+
+This ensures:
+- Virtual environment exists
+- Package is installed in editable mode
+- All dev dependencies are available (pytest, mypy, ruff)
+
+## 🚀 Quick Start (Local Setup)
+
+If you prefer **not** to use the dev container, follow these steps:
 
 ```bash
 # Clone the repository
 git clone <repo-url>
 cd docx
 
+# Install pandoc (see Requirements section above)
+# Install uv (see Requirements section above)
+
 # Create and activate virtual environment with uv
 uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install the package
-uv pip install -e .
+uv pip install -e ".[dev]"
 ```
 
 ## 📖 Usage
@@ -75,14 +136,30 @@ md-to-docx --help     # Display help information
 md-to-docx --version  # Show version number
 ```
 
+### Error Handling
+
+The CLI provides clear error messages for common issues:
+- ❌ Missing or invalid file paths
+- ❌ Incorrect file extensions (`.md` required for source, `.docx` for template)
+- ❌ Pandoc not installed or not in PATH
+- ❌ Pandoc conversion errors with stderr output
+
 ### Output Location
 
-Converted documents are automatically saved to:
-```
-<session-directory>/output/<timestamp>.docx
+Output files are **automatically generated** with timestamped names - no need to specify an output path!
+
+**Auto-derivation logic:**
+- If your markdown is at `sessions/example/input/source.md`
+- Output will be `sessions/example/output/<timestamp>.docx`
+- The output directory is created automatically if it doesn't exist
+
+**Example:**
+```bash
+md-to-docx sessions/example/input/source.md --template templates/word/template.docx
+# Creates: sessions/example/output/20260103135809.docx
 ```
 
-For example: `sessions/example/output/20260103135809.docx`
+**Note:** If your markdown is not in an `input/` subdirectory, the output directory will be created as a sibling to the source file.
 
 ## 🏗️ Project Structure
 
@@ -105,6 +182,9 @@ docx/
 
 ### Setup Development Environment
 
+**Dev Container:** Already configured! Dev dependencies are installed automatically.
+
+**Local Setup:**
 ```bash
 # Install with development dependencies
 uv pip install -e ".[dev]"
@@ -157,7 +237,10 @@ Run the test suite:
 pytest -v
 ```
 
-Expected output: `24 passed`
+Expected output: `18 passed` covering:
+- 8 CLI tests (version, help, arguments, error handling)
+- 5 conversion tests (success paths, resource paths, output creation)
+- 5 validation tests (file existence, extensions, pandoc availability)
 
 ## 📝 Session Manifest
 
