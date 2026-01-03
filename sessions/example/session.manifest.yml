@@ -1,0 +1,38 @@
+version: 1
+
+session:
+  id: "example"
+  created_utc: "2025-12-24T00:00:00Z"
+  created_by: "document-renderer-agent"
+
+document:
+  title: "Example Document"
+  doc_type: "unknown"
+  audience: "unknown"
+  tone: null
+
+inputs:
+  markdown_file: "sessions/example/source.md"
+  images_dir: "sessions/example/images"
+  sources_notes: null
+
+conversion:
+  docx_mode: "convert"
+  template_file: "templates/word/template.docx"
+  resource_path: "docs:docs/images"
+  embed_media: true
+  fail_on_missing_images: true
+
+outputs:
+  markdown_file: "sessions/example/source.md"
+  docx_file: "out/example-output.docx"
+  notes_file: "sessions/example/notes.md"
+
+history:
+  - timestamp_utc: "2025-12-24T00:00:00Z"
+    action: "create"
+    details: "Initial session created (manifest + empty source/notes)."
+
+- timestamp_utc: "2025-12-24T16:15:46Z"
+  action: "render"
+  details: "Rendered using pandoc"
